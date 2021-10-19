@@ -1,33 +1,42 @@
-+++++ +++               Set Cell #0 to 8
++++++++++++++++++++++++++++++++++			c1v33 : ASCII code of !
+>++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++				c2v61 : ASCII code of =
+>++++++++++						c3v10 : ASCII code of EOL
+>+++++++						c4v7  : quantity of numbers to be calculated
+>							c5v0  : current number (one digit)
+>+							c6v1  : current value of factorial (up to three digits)
+<<							c4    : loop counter
+[							block : loop to print one line and calculate next
+>++++++++++++++++++++++++++++++++++++++++++++++++.	c5    : print current number
+------------------------------------------------	c5    : back from ASCII to number
+<<<<.-.>.<.+						c1    : print !_=_
+
+>>>>>							block : print c6 (preserve it)
+>							c7v0  : service zero
+>++++++++++						c8v10 : divizor
+<<							c6    : back to dividend
+[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]			c6v0  : divmod algo borrowed from esolangs; results in 0 n d_n%d n%d n/d
+>[<+>-]							c6    : move dividend back to c6 and clear c7
+>[-]							c8v0  : clear c8
+
+>>							block : c10 can have two digits; divide it by ten again
+>++++++++++						c11v10: divizor
+<							c10   : back to dividend
+[->-[>+>>]>[+[-<+>]>+>>]<<<<<]				c10v0 : another divmod algo borrowed from esolangs; results in 0 d_n%d n%d n/d
+>[-]							c11v0 : clear c11
+>>[++++++++++++++++++++++++++++++++++++++++++++++++.[-]]c13v0 : print nonzero n/d (first digit) and clear c13
+<[++++++++++++++++++++++++++++++++++++++++++++++++.[-]] c12v0 : print nonzero n%d (second digit) and clear c12
+<<<++++++++++++++++++++++++++++++++++++++++++++++++.[-]	c9v0  : print any n%d (last digit) and clear c9
+
+<<<<<<.							c3    : EOL
+>>+							c5    : increment current number
+							block : multiply c6 by c5 (don't preserve c6)
+>[>>+<<-]						c6v0  : move c6 to c8
+>>							c8v0  : repeat c8 times
 [
-    >++++               Add 4 to Cell #1; this will always set Cell #1 to 4
-    [                   as the cell will be cleared by the loop
-        >++             Add 4*2 to Cell #2
-        >+++            Add 4*3 to Cell #3
-        >+++            Add 4*3 to Cell #4
-        >+              Add 4 to Cell #5
-        <<<<-           Decrement the loop counter in Cell #1
-    ]                   Loop till Cell #1 is zero
-    >+                  Add 1 to Cell #2
-    >+                  Add 1 to Cell #3
-    >-                  Subtract 1 from Cell #4
-    >>+                 Add 1 to Cell #6
-    [<]                 Move back to the first zero cell you find; this will
-                         be Cell #1 which was cleared by the previous loop
-    <-                  Decrement the loop Counter in Cell #0
-]                       Loop till Cell #0 is zero
- 
-The result of this is:
-Cell No :   0   1   2   3   4   5   6
-Contents:   0   0  72 104  88  32   8
-Pointer :   ^
- 
->>.                     Cell #2 has value 72 which is 'H'
->---.                   Subtract 3 from Cell #3 to get 101 which is 'e'
-+++++ ++..+++.          Likewise for 'llo' from Cell #3
->>.                     Cell #5 is 32 for the space
-<-.                     Subtract 1 from Cell #4 for 87 to give a 'W'
-<.                      Cell #3 was set to 'o' from the end of 'Hello'
-+++.----- -.----- ---.  Cell #3 for 'rl' and 'd'
->>+.                    Add 1 to Cell #5 gives us an exclamation point
->++.                    And finally a newline from Cell #6
+<<<[>+>+<<-]						c5v0  : move c5 to c6 and c7
+>>[<<+>>-]						c7v0  : move c7 back to c5
+>-
+]
+<<<<-							c4    : decrement loop counter
+]
