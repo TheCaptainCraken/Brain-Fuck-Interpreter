@@ -44,6 +44,8 @@ class Bfi:
                 self.pointer+=1
             case '<':
                 self.pointer-=1
+                if(self.pointer < 0):
+                    raise IndexError('The pointer is at position {0}'.format(self.pointer))
             case '+':
                 self.cells[self.pointer]+=1
             case '-':
@@ -51,7 +53,10 @@ class Bfi:
             case '.':
                 print(chr(self.cells[self.pointer]), end='')
             case ',':
-                self.cells[self.pointer] = ord(input('=> '))
+                try:
+                    self.cells[self.pointer] = ord(input('=> '))
+                except TypeError:
+                    raise TypeError('Asshole you inserted more than one character >:(')
             case ']':
                 if(self.cells[self.pointer] != 0):
                     a = self.brackets[a]
