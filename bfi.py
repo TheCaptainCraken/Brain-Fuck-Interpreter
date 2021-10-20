@@ -1,76 +1,89 @@
 class Bfi:
     def __init__(self, code) -> None:
-        self.symbols = '><+-.,[]'
-        self.brackets = {}
-        self.cells = [0 for i in range(30_000_0)]
-        self.pointer = 0
-        self.code = self.trim(code)
-        self.find_loops()
+        self.__symbols = '><+-.,[]'                                    #everything else is a comment
+        self.__brackets = {}                                           #position of [] in code to do loops
+        self.__cells = [0 for i in range(30_000_0)]                    #initialize the memory and the pointer
+        self.__pointer = 0
+        self.__code = self.__trim(code)                                #eliminate comments from code
+        self.__find_loops()                                            #find all the [] and save their position
     
-    def trim(self, raw) -> str:
-        cleaned = ''
-        for symbol in raw:
-            if(symbol in self.symbols):
-                cleaned+=symbol
-        return cleaned
+    #returns only the code from a file
+    def __trim(self, raw_code) -> str:
+        clean_code = ''
+        for symbol in raw_code:
+            if(symbol in self.__symbols):
+                clean_code+=symbol
+        return clean_code
 
-    def find_loops(self):
-        pc = 0
-        code = self.code 
-        for i in range(len(self.code)):
-            if(self.code[i] == '['):
-                pc+=1
-        for _ in range(pc):
-            pos1 = None
-            pos2 = None
-            k = 0
-            for j in range(len(code)-1, 0, -1):
-                if(code[j] == ']' and pos1 == None):
-                    pos1 = j
-                elif(code[j] == ']'):
-                    k+=1
-                elif(code[j] == '['):
-                    if(k == 0):
-                        pos2 = j
+    #finds [] in the code and then saves their position in self.__brackets to
+    #do loops in runtime
+    def __find_loops(self):
+        loops = 0
+        code = self.__code 
+        for i in range(len(self.__code)):
+                loops = loops + 1 if self.__code[i] == '[' else loops
+        for _ in range(loops):
+            end_loop = None
+            start_loop = None
+            ignore = 0
+            for i in range(len(code)-1, 0, -1):
+                if(code[i] == ']' and end_loop == None):
+                    end_loop = i
+                elif(code[i] == ']'):
+                    ignore+=1
+                elif(code[i] == '['):
+                    if(ignore == 0):
+                        start_loop = i
                     else:
-                        k-=1
-            code = code[:pos1] + '#' + code[pos1+1:]
-            code = code[:pos2] + '#' + code[pos2+1:]
-            self.brackets[pos1] = pos2
-                
-    def op(self, o, a):
-        match o:
+                        ignore-=1
+            code = code[:end_loop] + '#' + code[end_loop+1:]
+            code = code[:start_loop] + '#' + code[start_loop+1:]
+            self.__brackets[end_loop] = start_loop
+    
+    #takes a symbol and the code_pointer to then execute the corresponding instruction_
+    #   >   move the memory pointer right
+    #   <   move the memory pointer left
+    #   +   increment the number in the memory cell pointed by the memory pointer
+    #   -   decrement the number in the memory cell pointed by the memory pointer
+    #   .   output the ascii char in the memory cell pointed by the memory pointer
+    #   ,   intput a single char in the memory cell pointed by the memory pointer
+    #   [   jump to the corresponding ] if the memory cell pointed by the memory pointer is 0
+    #   ]   jump to the corresponding [ if the memory cell pointed by the memory pointer is NOT 0
+    def __op(self, op, code_pointer):
+        match op:
             case '>':
-                self.pointer+=1
+                self.__pointer+=1
             case '<':
-                self.pointer-=1
-                if(self.pointer < 0):
-                    raise IndexError('The pointer is at position {0}'.format(self.pointer))
+                self.__pointer-=1
+                if(self.__pointer < 0):
+                    raise IndexError('The pointer is at position {0}'.format(self.__pointer))
             case '+':
-                self.cells[self.pointer]+=1
+                self.__cells[self.__pointer]+=1
             case '-':
-                self.cells[self.pointer]-=1
+                self.__cells[self.__pointer]-=1
             case '.':
-                print(chr(self.cells[self.pointer]), end='')
+                print(chr(self.__cells[self.__pointer]), end='')
             case ',':
                 try:
-                    self.cells[self.pointer] = ord(input('=> '))
+                    self.__cells[self.__pointer] = ord(input('=> '))
                 except TypeError:
                     raise TypeError('You inserted more than one character >:(')
             case ']':
-                if(self.cells[self.pointer] != 0):
-                    a = self.brackets[a]
+                if(self.__cells[self.__pointer] != 0):
+                    code_pointer = self.__brackets[code_pointer]
             case '[':
-                if(self.cells[self.pointer] == 0):
-                    a = list(self.brackets.keys())[list(self.brackets.values()).index(a)]
+                if(self.__cells[self.__pointer] == 0):
+                    code_pointer = list(self.__brackets.keys())[list(self.__brackets.values()).index(code_pointer)]
             case _:
                 pass
-        return a
+        return code_pointer
+    
+    #run the program starting from the first symbol and end it after the last one :)
     def execute(self):
         pos = 0
-        while pos < len(self.code):
-            pos = self.op(self.code[pos], pos)
+        while pos < len(self.__code):
+            pos = self.__op(self.__code[pos], pos)
             pos+=1
 
     def __str__(self) -> str:
-        return self.code
+        return self.__code
