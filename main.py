@@ -1,6 +1,7 @@
+import sys
 from bfi import *
 
-with open('code.bf', 'r') as f:
+with open(sys.argv[1], 'r') as f:
     tha_code = f.read()
 
 

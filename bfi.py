@@ -38,9 +38,6 @@ class Bfi:
             code = code[:pos2] + '#' + code[pos2+1:]
             self.brackets[pos1] = pos2
                 
-
-
-
     def op(self, o, a):
         match o:
             case '>':
@@ -61,7 +58,6 @@ class Bfi:
             case '[':
                 if(self.cells[self.pointer] == 0):
                     a = list(self.brackets.keys())[list(self.brackets.values()).index(a)]
-                pass
             case _:
                 pass
         return a
