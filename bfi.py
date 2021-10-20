@@ -4,17 +4,17 @@ class Bfi:
         self.brackets = {}
         self.cells = [0 for i in range(30_000_0)]
         self.pointer = 0
-        self.code = self.trim_that_bitch(code)
-        self.poop()
+        self.code = self.trim(code)
+        self.find_loops()
     
-    def trim_that_bitch(self, the_bich) -> str:
-        trimmed_bitch = ''
-        for symbol in the_bich:
+    def trim(self, raw) -> str:
+        cleaned = ''
+        for symbol in raw:
             if(symbol in self.symbols):
-                trimmed_bitch+=symbol
-        return trimmed_bitch
+                cleaned+=symbol
+        return cleaned
 
-    def poop(self):
+    def find_loops(self):
         pc = 0
         code = self.code 
         for i in range(len(self.code)):
@@ -56,7 +56,7 @@ class Bfi:
                 try:
                     self.cells[self.pointer] = ord(input('=> '))
                 except TypeError:
-                    raise TypeError('Asshole you inserted more than one character >:(')
+                    raise TypeError('You inserted more than one character >:(')
             case ']':
                 if(self.cells[self.pointer] != 0):
                     a = self.brackets[a]
